@@ -3,135 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Surprise</title>
+    <title>A Special Surprise for You</title>
+    
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
     
     <style>
-        body {
-            background-color: #fceef0; /* Light pink background */
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        /* 1. CLEAN BACKGROUND (No more gray boxes) */
+        * { box-sizing: border-box; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            background-color: #fff0f3; /* Elegant Soft Pink */
             overflow: hidden;
-            font-family: 'Playfair Display', serif;
         }
 
-        /* STAGE 1: ENVELOPE */
+        /* 2. ENVELOPE STAGE */
         #envelope-stage {
-            text-align: center;
             cursor: pointer;
+            text-align: center;
+            z-index: 10;
+        }
+        .envelope-img {
+            width: 340px;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.1));
             transition: transform 0.3s;
         }
-        #envelope-stage:hover { transform: scale(1.05); }
-        .env-img { width: 320px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15)); }
-        .tap-text { font-size: 1.2rem; color: #b0413e; margin-top: 15px; animation: blink 2s infinite; }
+        #envelope-stage:hover .envelope-img { transform: scale(1.05); }
+        .tap-text {
+            font-family: 'Playfair Display', serif;
+            color: #b0413e;
+            margin-top: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: blink 2s infinite;
+        }
 
-        /* STAGE 2: THE PAPER CARD */
+        /* 3. THE VINTAGE PAPER PANEL */
         #card-stage {
             display: none;
             width: 90%;
-            max-width: 420px;
-            height: 580px;
-            background-image: url('paper.jpg'); /* Your paper reference */
+            max-width: 450px;
+            height: 600px;
+            background-image: url('paper.jpg'); /* YOUR CHECKERED/CANVAS IMAGE */
             background-size: 100% 100%;
-            padding: 40px 30px;
-            box-sizing: border-box;
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            padding: 60px 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
             animation: slideUp 1s ease-out;
-            border-radius: 10px;
+            border-radius: 5px;
         }
 
-        .cursive-header {
+        .happy-header {
             font-family: 'Great Vibes', cursive;
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: #b0413e;
             text-align: center;
-            margin: 30px 0 10px 0;
+            margin: 0 0 20px 0;
         }
 
-        .message-box {
-            height: 320px;
-            overflow-y: auto;
+        .message-content {
+            font-family: 'Playfair Display', serif;
             font-size: 1.1rem;
-            line-height: 1.6;
             color: #333;
+            line-height: 1.7;
+            height: 350px;
+            overflow-y: auto;
+            white-space: pre-wrap; /* Keeps your paragraph formatting */
             padding-right: 10px;
-            white-space: pre-wrap; /* Keeps paragraph breaks */
         }
 
-        /* STAGE 3: THE FLOWER */
+        /* 4. THE VIRTUAL FLOWER (Big, Left, Rotated) */
         #flower-img {
             display: none;
             position: absolute;
-            bottom: 10px;
-            left: -40px; /* Positioned to the left as requested */
-            width: 180px;
+            bottom: -40px;
+            left: -80px; /* Positioned to the left side */
+            width: 250px; /* Made it big */
             transform: rotate(-15deg); /* Rotated for harmonization */
             z-index: 100;
+            filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.2));
         }
 
         /* Animations */
         @keyframes blink { 0%, 100% {opacity: 1;} 50% {opacity: 0.3;} }
-        @keyframes slideUp { from { transform: translateY(100vh); } to { transform: translateY(0); } }
-        
-        /* Hide Scrollbar */
-        .message-box::-webkit-scrollbar { display: none; }
+        @keyframes slideUp { from { transform: translateY(100vh); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .message-content::-webkit-scrollbar { display: none; } /* Hide scrollbar */
     </style>
 </head>
 <body>
 
-    <!-- CLICKABLE ENVELOPE -->
+    <!-- STAGE 1: THE ENVELOPE -->
     <div id="envelope-stage" onclick="openSurprise()">
-        <img src="envelope.png" class="env-img">
-        <p class="tap-text">CLICK TO OPEN ✨</p>
+        <img src="envelope.png" class="envelope-img">
+        <div class="tap-text">CLICK TO OPEN ✨</div>
     </div>
 
-    <!-- THE VIRTUAL CARD -->
+    <!-- STAGE 2: THE CARD -->
     <div id="card-stage">
-        <div class="cursive-header">Happy Mother's Day</div>
-        <div class="message-box" id="letter-content">
-            <!-- Message injected by JS -->
+        <h1 class="happy-header">Happy Mother's Day</h1>
+        <div class="message-content" id="main-message">
+            <!-- Messages will be injected here -->
         </div>
         <img id="flower-img" src="flower.png">
     </div>
 
-    <audio id="bg-music" src="music.mp3"></audio>
+    <audio id="audio" src="music.mp3"></audio>
 
     <script>
-        // --- DATA SECTION: EDIT YOUR MESSAGES HERE ---
-        const messages = {
-            "mom": "Dearest Mom,\n\nYou are the heart of this family. Thank you for everything you do. I hope you love this little digital gift I made for you!\n\nWith love, [Your Name]",
+        // ==========================================
+        // THE DATABASE (All your letters are here!)
+        // ==========================================
+        const lettersDatabase = {
+            "dins": "Thank you, Tita, for always being there, supporting us both silently and loudly. I know you’ve seen me po as an emotional kid since I was a young girl, but I don't think I’ve ever been vocal enough about how much I appreciate everything you’ve done for us, Tita. Thank you for your never-ending care, for accepting us despite our differences, for always guiding us in the paths we take, and lastly, for being a mother to us.\n\nI will never forget all the advice you have given me, Tita. I’m forever grateful for you. Even though our Mama is in heaven, I never felt like I didn't have one because of you—because of the love you showed and made us feel. I love you, Tita. Happy Mother’s Day to our beautiful and kind Tita!\n\nLove, Alyssa",
             
-            "auntie-marie": "Hi Auntie Marie!\n\nHappy Mother's Day to one of the most caring women I know. Thank you for always being there and for the wisdom you share. Enjoy your special day!\n\nLove, [Your Name]",
+            "emem": "Hello, Ate! Thank you so much po ate sa lahat, lagi niyo po kaming binibusog at inaalagaan tuwing nandyan po kami kasama niyo ate, super duper nag e-enjoy po ako na kasama kayo ate. thank you for always welcoming us ate, we love you ate! and lagi po namin kayo ma-mimiss mwa mwa\n\nLove, Alyssa",
             
-            "ate-joy": "To my dearest Ate Joy,\n\nYou are an amazing mother and an even better sister. Watching you grow into this role has been a joy. Happy Mother's Day!\n\nLove, [Your Name]"
+            "vangie": "Thank you po tita Vangie for taking care and supporting us! Always take care tita! Happy Mother's Day po!\n\nLove, Alyssa",
+            
+            "agnes": "Tita Agnes, thank you po for showing your love for us through cooking delicious foods, binubusog niyo po kami ng pag mamahal niyo, Happy Mother's po Day Tita!\n\nLove, Alyssa",
+            
+            "teteng": "Happy Mother's Day po Mami Teteng! Thank you po for always welcoming us, lagi po kaming nag e-enjoy pag kasama po namin kayo!\n\nLove, Alyssa",
+            
+            "sugar": "Happy Mother's Day po Mami Sugar! Thank you for always welcoming us po!\n\nLove, Alyssa",
+            
+            "abby": "Happy Mother's Day Ate/Mami Abby! Thank you po for always welcoming us and sa mga masaya pong kwentuhan! Lagi po kaming nag e-enjoy!\n\nLove, Alyssa"
         };
 
         function openSurprise() {
-            // 1. Get ID from link (?to=ate-joy)
-            const params = new URLSearchParams(window.location.search);
-            const person = params.get('to') || "mom";
+            // Get the person from the URL (?to=name)
+            const urlParams = new URLSearchParams(window.location.search);
+            const person = urlParams.get('to') || "dins"; // Default to Tita Dins
 
-            // 2. Play Music
-            const music = document.getElementById('bg-music');
-            music.play();
+            // Play music
+            document.getElementById('audio').play();
 
-            // 3. Swap Stages
+            // Transition
             document.getElementById('envelope-stage').style.display = "none";
             document.getElementById('card-stage').style.display = "block";
 
-            // 4. Set Text
-            document.getElementById('letter-content').innerText = messages[person] || messages["mom"];
+            // Load specific letter
+            document.getElementById('main-message').innerText = lettersDatabase[person] || "Happy Mother's Day!";
 
-            // 5. Flower Timer (5 Seconds)
+            // 5 Second Flower Reveal
             setTimeout(() => {
                 const flower = document.getElementById('flower-img');
                 flower.style.display = "block";
-                flower.style.animation = "fadeIn 2s ease";
+                flower.animate([
+                    { opacity: 0, transform: 'scale(0.5) rotate(-30deg)' },
+                    { opacity: 1, transform: 'scale(1) rotate(-15deg)' }
+                ], { duration: 1000, fill: 'forwards' });
             }, 5000);
         }
     </script>
