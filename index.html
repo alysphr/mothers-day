@@ -3,157 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Special Surprise for You</title>
-    
-    <!-- Fonts -->
+    <title>A Special Surprise</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. CLEAN BACKGROUND (No more gray boxes) */
+        :root {
+            --bg-color: #fff0f3;
+            --envelope-color: #b0413e;
+            --flap-color: #91312f;
+            --wax-seal: #d4af37;
+        }
+
         * { box-sizing: border-box; }
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100vh;
             display: flex; justify-content: center; align-items: center;
-            background-color: #fff0f3; /* Elegant Soft Pink */
+            background-color: var(--bg-color);
             overflow: hidden;
         }
 
-        /* 2. ENVELOPE STAGE */
-        #envelope-stage {
+        /* --- STAGE 1: CODED VINTAGE ENVELOPE --- */
+        .envelope-wrapper {
+            position: relative;
             cursor: pointer;
-            text-align: center;
-            z-index: 10;
-        }
-        .envelope-img {
-            width: 340px;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.1));
             transition: transform 0.3s;
         }
-        #envelope-stage:hover .envelope-img { transform: scale(1.05); }
-        .tap-text {
-            font-family: 'Playfair Display', serif;
-            color: #b0413e;
-            margin-top: 20px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            animation: blink 2s infinite;
+        .envelope-wrapper:hover { transform: scale(1.05); }
+
+        .envelope {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background: var(--envelope-color);
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
-        /* 3. THE VINTAGE PAPER PANEL */
+        /* The Flap */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 100px solid var(--flap-color);
+            z-index: 2;
+        }
+
+        /* The Wax Seal */
+        .wax-seal {
+            position: absolute;
+            top: 80px; left: 120px;
+            width: 40px; height: 40px;
+            background: var(--wax-seal);
+            border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 12px; color: #5c4300;
+        }
+
+        .tap-hint {
+            font-family: 'Playfair Display', serif;
+            color: var(--envelope-color);
+            text-align: center;
+            margin-top: 30px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            animation: fadeInOut 2s infinite;
+        }
+
+        /* --- STAGE 2: THE ZOOMED OUT CARD --- */
         #card-stage {
             display: none;
-            width: 90%;
-            max-width: 450px;
-            height: 600px;
-            background-image: url('paper.jpg'); /* YOUR CHECKERED/CANVAS IMAGE */
+            width: 85%;
+            max-width: 380px; /* Zoomed out width */
+            height: 520px;
+            background-image: url('paper.jpg');
             background-size: 100% 100%;
             position: relative;
-            padding: 60px 40px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-            animation: slideUp 1s ease-out;
-            border-radius: 5px;
+            padding: 40px 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            animation: slideUp 1.2s ease-out;
         }
 
         .happy-header {
             font-family: 'Great Vibes', cursive;
-            font-size: 3.5rem;
+            font-size: 2.5rem; /* Balanced size */
             color: #b0413e;
             text-align: center;
-            margin: 0 0 20px 0;
+            margin: 10px 0;
         }
 
         .message-content {
             font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
+            font-size: 0.95rem; /* Smaller, professional font size */
             color: #333;
-            line-height: 1.7;
-            height: 350px;
+            line-height: 1.6;
+            height: 340px;
             overflow-y: auto;
-            white-space: pre-wrap; /* Keeps your paragraph formatting */
-            padding-right: 10px;
+            white-space: pre-wrap;
+            padding: 0 5px;
         }
 
-        /* 4. THE VIRTUAL FLOWER (Big, Left, Rotated) */
+        /* --- STAGE 3: THE SIDE FLOWER (Pushed Left) --- */
         #flower-img {
             display: none;
             position: absolute;
-            bottom: -40px;
-            left: -80px; /* Positioned to the left side */
-            width: 250px; /* Made it big */
-            transform: rotate(-15deg); /* Rotated for harmonization */
+            bottom: 20px;
+            left: -130px; /* Pushed far left so it won't block text */
+            width: 180px;
+            transform: rotate(-10deg);
             z-index: 100;
-            filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.2));
+            filter: drop-shadow(10px 10px 20px rgba(0,0,0,0.1));
         }
 
-        /* Animations */
-        @keyframes blink { 0%, 100% {opacity: 1;} 50% {opacity: 0.3;} }
-        @keyframes slideUp { from { transform: translateY(100vh); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .message-content::-webkit-scrollbar { display: none; } /* Hide scrollbar */
+        @keyframes fadeInOut { 0%, 100% {opacity: 1;} 50% {opacity: 0.4;} }
+        @keyframes slideUp { from { transform: translateY(100vh); } to { transform: translateY(0); } }
+        .message-content::-webkit-scrollbar { width: 3px; }
+        .message-content::-webkit-scrollbar-thumb { background: rgba(176, 65, 62, 0.2); }
     </style>
 </head>
 <body>
 
-    <!-- STAGE 1: THE ENVELOPE -->
-    <div id="envelope-stage" onclick="openSurprise()">
-        <img src="envelope.png" class="envelope-img">
-        <div class="tap-text">CLICK TO OPEN ✨</div>
+    <!-- CLICKABLE ENVELOPE AREA -->
+    <div id="envelope-area" onclick="openSurprise()">
+        <div class="envelope-wrapper">
+            <div class="envelope">
+                <div class="wax-seal">❤</div>
+            </div>
+        </div>
+        <div class="tap-hint">CLICK TO OPEN ✨</div>
     </div>
 
-    <!-- STAGE 2: THE CARD -->
+    <!-- THE CARD -->
     <div id="card-stage">
         <h1 class="happy-header">Happy Mother's Day</h1>
-        <div class="message-content" id="main-message">
-            <!-- Messages will be injected here -->
-        </div>
+        <div class="message-content" id="main-text"></div>
         <img id="flower-img" src="flower.png">
     </div>
 
-    <audio id="audio" src="music.mp3"></audio>
+    <audio id="music" src="music.mp3"></audio>
 
     <script>
-        // ==========================================
-        // THE DATABASE (All your letters are here!)
-        // ==========================================
-        const lettersDatabase = {
+        const letters = {
             "dins": "Thank you, Tita, for always being there, supporting us both silently and loudly. I know you’ve seen me po as an emotional kid since I was a young girl, but I don't think I’ve ever been vocal enough about how much I appreciate everything you’ve done for us, Tita. Thank you for your never-ending care, for accepting us despite our differences, for always guiding us in the paths we take, and lastly, for being a mother to us.\n\nI will never forget all the advice you have given me, Tita. I’m forever grateful for you. Even though our Mama is in heaven, I never felt like I didn't have one because of you—because of the love you showed and made us feel. I love you, Tita. Happy Mother’s Day to our beautiful and kind Tita!\n\nLove, Alyssa",
-            
             "emem": "Hello, Ate! Thank you so much po ate sa lahat, lagi niyo po kaming binibusog at inaalagaan tuwing nandyan po kami kasama niyo ate, super duper nag e-enjoy po ako na kasama kayo ate. thank you for always welcoming us ate, we love you ate! and lagi po namin kayo ma-mimiss mwa mwa\n\nLove, Alyssa",
-            
             "vangie": "Thank you po tita Vangie for taking care and supporting us! Always take care tita! Happy Mother's Day po!\n\nLove, Alyssa",
-            
             "agnes": "Tita Agnes, thank you po for showing your love for us through cooking delicious foods, binubusog niyo po kami ng pag mamahal niyo, Happy Mother's po Day Tita!\n\nLove, Alyssa",
-            
             "teteng": "Happy Mother's Day po Mami Teteng! Thank you po for always welcoming us, lagi po kaming nag e-enjoy pag kasama po namin kayo!\n\nLove, Alyssa",
-            
             "sugar": "Happy Mother's Day po Mami Sugar! Thank you for always welcoming us po!\n\nLove, Alyssa",
-            
             "abby": "Happy Mother's Day Ate/Mami Abby! Thank you po for always welcoming us and sa mga masaya pong kwentuhan! Lagi po kaming nag e-enjoy!\n\nLove, Alyssa"
         };
 
         function openSurprise() {
-            // Get the person from the URL (?to=name)
-            const urlParams = new URLSearchParams(window.location.search);
-            const person = urlParams.get('to') || "dins"; // Default to Tita Dins
+            const params = new URLSearchParams(window.location.search);
+            const to = params.get('to') || "dins";
 
-            // Play music
-            document.getElementById('audio').play();
-
-            // Transition
-            document.getElementById('envelope-stage').style.display = "none";
+            document.getElementById('music').play();
+            document.getElementById('envelope-area').style.display = "none";
             document.getElementById('card-stage').style.display = "block";
+            document.getElementById('main-text').innerText = letters[to] || "Happy Mother's Day!";
 
-            // Load specific letter
-            document.getElementById('main-message').innerText = lettersDatabase[person] || "Happy Mother's Day!";
-
-            // 5 Second Flower Reveal
             setTimeout(() => {
-                const flower = document.getElementById('flower-img');
-                flower.style.display = "block";
-                flower.animate([
-                    { opacity: 0, transform: 'scale(0.5) rotate(-30deg)' },
-                    { opacity: 1, transform: 'scale(1) rotate(-15deg)' }
-                ], { duration: 1000, fill: 'forwards' });
+                const fl = document.getElementById('flower-img');
+                fl.style.display = "block";
+                fl.animate([{ opacity: 0, left: '-200px' }, { opacity: 1, left: '-130px' }], { duration: 1000, fill: 'forwards' });
             }, 5000);
         }
     </script>
