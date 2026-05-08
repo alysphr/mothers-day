@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Surprise for You</title>
+    <!-- Beautiful Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #fff0f3; /* Light Pink */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+        }
+
+        /* The Envelope */
+        #envelope-container {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #envelope-container:hover { transform: scale(1.1); }
+
+        .envelope {
+            width: 250px;
+            height: 150px;
+            background: #ff4d6d; /* Red/Pink */
+            position: relative;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* The Flap */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            border-top: 90px solid #ff758f; /* Lighter pink flap */
+        }
+
+        .instruction {
+            margin-top: 20px;
+            color: #c9184a;
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
+
+        /* The Paper Panel */
+        #card {
+            display: none;
+            width: 85%;
+            max-width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: #ff4d6d;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        /* The Flower */
+        #flower-img {
+            display: none;
+            width: 120px;
+            position: absolute;
+            bottom: -50px;
+            right: -30px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CLICKABLE ENVELOPE -->
+    <div id="envelope-container" onclick="openCard()">
+        <div class="envelope"></div>
+        <div class="instruction">CLICK TO OPEN ✨</div>
+    </div>
+
+    <!-- THE LETTER CONTENT -->
+    <div id="card">
+        <div class="title">Happy Mother's Day</div>
+        <p class="message" id="text-box"></p>
+        <img id="flower-img" src="flower.png" alt="Flower">
+    </div>
+
+    <audio id="mySong" src="music.mp3"></audio>
+
+    <script>
+        // Function to get Name and Message from the URL
+        const params = new URLSearchParams(window.location.search);
+        const recipientName = params.get('name') || "Mom";
+        const customMessage = params.get('msg') || "You are the heart of our home. We love you so much!";
+
+        function openCard() {
+            // Play Music
+            document.getElementById('mySong').play();
+
+            // Hide Envelope
+            document.getElementById('envelope-container').style.display = "none";
+
+            // Show Card
+            const card = document.getElementById('card');
+            card.style.display = "block";
+
+            // Insert Text
+            document.getElementById('text-box').innerHTML = `Dearest ${recipientName},<br><br>${customMessage}`;
+
+            // Wait 5 seconds, then show flower
+            setTimeout(() => {
+                const flower = document.getElementById('flower-img');
+                flower.style.display = "block";
+                flower.style.animation = "fadeIn 2s forwards";
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
