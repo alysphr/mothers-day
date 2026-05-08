@@ -63,6 +63,8 @@
             color: #333; line-height: 1.6; height: 320px;
             overflow-y: auto; white-space: pre-wrap;
             padding: 0 10px 0 40px; /* Space for flower */
+            /* THE FIX: Adds invisible space at the bottom so text can scroll PAST the flower */
+            padding-bottom: 100px; 
         }
 
         /* Custom Scrollbar */
@@ -70,7 +72,7 @@
         .message-content::-webkit-scrollbar-thumb { background: var(--vintage-red); border-radius: 10px; }
 
         #scroll-hint {
-            display: none; /* Hidden by default, shown by JS if needed */
+            display: none;
             font-size: 0.75rem; color: #b0413e; text-align: right;
             margin-top: 8px; font-family: sans-serif; font-weight: bold;
             animation: bounce 2s infinite;
@@ -82,6 +84,7 @@
             bottom: 10px; z-index: 100;
             transform: rotate(-12deg);
             filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.1));
+            pointer-events: none;
         }
 
         @media screen and (min-width: 600px) {
@@ -136,7 +139,6 @@
             
             letterArea.innerText = database[key] || "Happy Mother's Day!";
 
-            // SMART SCROLL HINT: Only show if text overflows
             if (letterArea.scrollHeight > letterArea.clientHeight) {
                 document.getElementById('scroll-hint').style.display = "block";
             }
