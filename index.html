@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mother's Day Surprise</title>
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet">
     
     <style>
-        /* Version 2.1 - Forced Layout Update */
         :root {
             --pink-bg: #fff0f3;
             --vintage-red: #b0413e;
-            --paper-shadow: rgba(0,0,0,0.2);
         }
 
         * { box-sizing: border-box; }
@@ -24,119 +21,101 @@
             overflow: hidden;
         }
 
-        /* --- 1. CLEAN CSS ENVELOPE (No Images) --- */
-        #envelope-wrapper {
-            cursor: pointer;
-            text-align: center;
-            display: block;
-        }
+        /* --- ENVELOPE --- */
+        #envelope-wrapper { cursor: pointer; text-align: center; }
         .envelope {
-            position: relative;
-            width: 250px;
-            height: 160px;
-            background: var(--vintage-red);
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 10px 30px var(--paper-shadow);
+            position: relative; width: 250px; height: 160px;
+            background: var(--vintage-red); border-radius: 0 0 5px 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .envelope::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0;
-            border-left: 125px solid transparent;
-            border-right: 125px solid transparent;
+            content: ""; position: absolute; top: 0; left: 0;
+            border-left: 125px solid transparent; border-right: 125px solid transparent;
             border-top: 90px solid #91312f;
         }
         .wax-seal {
-            position: absolute;
-            top: 70px; left: 105px;
-            width: 40px; height: 40px;
-            background: #d4af37;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            display: flex; justify-content: center; align-items: center;
-            color: #5c4300; font-size: 18px;
+            position: absolute; top: 70px; left: 105px;
+            width: 40px; height: 40px; background: #d4af37;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: #5c4300; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
         .click-me {
-            font-family: 'Playfair Display', serif;
-            color: var(--vintage-red);
-            margin-top: 20px;
-            font-weight: bold;
-            animation: blink 2s infinite;
+            font-family: 'Playfair Display', serif; color: var(--vintage-red);
+            margin-top: 20px; font-weight: bold; animation: blink 2s infinite;
         }
 
-        /* --- 2. ZOOMED OUT CARD & PUSHED TEXT --- */
+        /* --- THE CARD --- */
         #card-stage {
-            display: none;
-            width: 350px; /* Zoomed out width */
-            height: 500px; /* Zoomed out height */
-            background-image: url('paper.jpg');
-            background-size: 100% 100%;
-            position: relative;
-            padding: 30px;
-            box-shadow: 0 20px 50px var(--paper-shadow);
+            display: none; width: 340px; height: 500px;
+            background-image: url('paper.jpg'); background-size: 100% 100%;
+            position: relative; padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
             animation: slideUp 1s ease-out;
-            overflow: visible; /* Allows flower to sit outside */
         }
 
         .happy-header {
-            font-family: 'Great Vibes', cursive;
-            font-size: 2.2rem;
-            color: var(--vintage-red);
-            text-align: center;
-            margin: 10px 0;
+            font-family: 'Great Vibes', cursive; font-size: 2.2rem;
+            color: var(--vintage-red); text-align: center; margin: 10px 0;
         }
 
         .message-content {
-            font-family: 'Playfair Display', serif;
-            font-size: 0.9rem;
-            color: #333;
-            line-height: 1.5;
-            height: 330px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            /* PUSH TEXT TO THE RIGHT TO MAKE ROOM FOR FLOWER */
-            padding-left: 45px; 
-            padding-right: 5px;
-            text-align: left;
+            font-family: 'Playfair Display', serif; font-size: 1rem;
+            color: #333; line-height: 1.6; height: 320px;
+            overflow-y: auto; white-space: pre-wrap;
+            padding: 0 10px 0 40px; /* Space for flower */
         }
 
-        /* --- 3. HARMONIZED FLOWER (Pushed Left) --- */
+        /* Custom Scrollbar */
+        .message-content::-webkit-scrollbar { width: 4px; }
+        .message-content::-webkit-scrollbar-thumb { background: var(--vintage-red); border-radius: 10px; }
+
+        #scroll-hint {
+            display: none; /* Hidden by default, shown by JS if needed */
+            font-size: 0.75rem; color: #b0413e; text-align: right;
+            margin-top: 8px; font-family: sans-serif; font-weight: bold;
+            animation: bounce 2s infinite;
+        }
+
+        /* --- THE FLOWER --- */
         #flower-img {
-            display: none;
-            position: absolute;
-            bottom: 10px;
-            left: -85px; /* Pushed far left away from text */
-            width: 170px; /* Harmonized size */
+            display: none; position: absolute;
+            bottom: 10px; z-index: 100;
             transform: rotate(-12deg);
-            z-index: 100;
             filter: drop-shadow(5px 5px 15px rgba(0,0,0,0.1));
-            pointer-events: none; /* Clicking flower won't block anything */
+        }
+
+        @media screen and (min-width: 600px) {
+            #flower-img { left: -90px; width: 170px; }
+        }
+
+        @media screen and (max-width: 599px) {
+            #flower-img { left: -45px; width: 150px; }
+            #card-stage { width: 320px; }
         }
 
         @keyframes blink { 0%, 100% {opacity: 1;} 50% {opacity: 0.3;} }
         @keyframes slideUp { from { transform: translateY(100vh); } to { transform: translateY(0); } }
-        .message-content::-webkit-scrollbar { width: 0px; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-5px);} }
     </style>
 </head>
 <body>
 
     <div id="envelope-wrapper" onclick="openSurprise()">
-        <div class="envelope">
-            <div class="wax-seal">❤</div>
-        </div>
+        <div class="envelope"><div class="wax-seal">❤</div></div>
         <p class="click-me">CLICK TO OPEN ✨</p>
     </div>
 
     <div id="card-stage">
         <h1 class="happy-header">Happy Mother's Day</h1>
-        <div class="message-content" id="text-db"></div>
+        <div class="message-content" id="main-letter"></div>
+        <div id="scroll-hint">Scroll down for more ↓</div>
         <img id="flower-img" src="flower.png">
     </div>
 
     <audio id="music" src="music.mp3"></audio>
 
     <script>
-        const letters = {
+        const database = {
             "dins": "Thank you, Tita, for always being there, supporting us both silently and loudly. I know you’ve seen me po as an emotional kid since I was a young girl, but I don't think I’ve ever been vocal enough about how much I appreciate everything you’ve done for us, Tita. Thank you for your never-ending care, for accepting us despite our differences, for always guiding us in the paths we take, and lastly, for being a mother to us.\n\nI will never forget all the advice you have given me, Tita. I’m forever grateful for you. Even though our Mama is in heaven, I never felt like I didn't have one because of you—because of the love you showed and made us feel. I love you, Tita. Happy Mother’s Day to our beautiful and kind Tita!\n\nLove, Alyssa",
             "emem": "Hello, Ate! Thank you so much po ate sa lahat, lagi niyo po kaming binibusog at inaalagaan tuwing nandyan po kami kasama niyo ate, super duper nag e-enjoy po ako na kasama kayo ate. thank you for always welcoming us ate, we love you ate! and lagi po namin kayo ma-mimiss mwa mwa\n\nLove, Alyssa",
             "vangie": "Thank you po tita Vangie for taking care and supporting us! Always take care tita! Happy Mother's Day po!\n\nLove, Alyssa",
@@ -147,16 +126,25 @@
         };
 
         function openSurprise() {
-            const to = new URLSearchParams(window.location.search).get('to') || "dins";
+            const urlParams = new URLSearchParams(window.location.search);
+            const key = urlParams.get('to') || "dins";
+            const letterArea = document.getElementById('main-letter');
+
             document.getElementById('music').play();
             document.getElementById('envelope-wrapper').style.display = "none";
             document.getElementById('card-stage').style.display = "block";
-            document.getElementById('text-db').innerText = letters[to] || "Happy Mother's Day!";
+            
+            letterArea.innerText = database[key] || "Happy Mother's Day!";
+
+            // SMART SCROLL HINT: Only show if text overflows
+            if (letterArea.scrollHeight > letterArea.clientHeight) {
+                document.getElementById('scroll-hint').style.display = "block";
+            }
 
             setTimeout(() => {
-                const f = document.getElementById('flower-img');
-                f.style.display = "block";
-                f.animate([{opacity: 0, transform: 'translateX(-20px) rotate(-20deg)'}, {opacity: 1, transform: 'translateX(0) rotate(-12deg)'}], {duration: 1000, fill:'forwards'});
+                const fl = document.getElementById('flower-img');
+                fl.style.display = "block";
+                fl.animate([{opacity: 0, transform: 'scale(0.5)'}, {opacity: 1, transform: 'scale(1)'}], {duration: 800, fill: 'forwards'});
             }, 5000);
         }
     </script>
