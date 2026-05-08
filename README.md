@@ -1,2 +1,2 @@
 # mothers-day
-letter for mother's
+letter/card for mother's
